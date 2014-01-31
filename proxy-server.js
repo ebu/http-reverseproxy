@@ -14,6 +14,7 @@ var sendError = function(err, req, res) {
 var proxy = httpProxy.createProxyServer({});
 
 proxy.on('error', function(err, req, res) {
+  console.log('Unable to forward the request from ', req.headers['host']);
   sendError(err, req, res);
 });
 
@@ -21,9 +22,7 @@ var server = require('http').createServer(function(req, res) {
   var reqHost = req.headers['host'];
 
   for(c in config.proxies) {
-
     var configHost = config.proxies[c].host;
-
     if(reqHost === configHost){
       return proxy.web(req, res, { target: 'http://127.0.0.1:' + config.proxies[c].local_port });
     }
