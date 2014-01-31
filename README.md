@@ -23,7 +23,9 @@ Ensure your system has [Node.js](http://nodejs.org/) and NPM installed.
 
 ## Configuration
 
-config.js contains an example of configuration
+config.dist.js contains an example of configuration
+
+    Edit config.dist.js and rename it to config.js
 
 
 ## Related Projects
