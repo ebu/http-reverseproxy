@@ -1,8 +1,11 @@
-
-
 var config = {
   listening_port: 5000,
-  backend_servers:[
+  https: {
+    listening_port: 443,
+    key: '',
+    cert: ''
+  },
+  backend_servers: [
     {
       'local_port': 8080,
       'origin_host': 'www.ebu.io:5000'
