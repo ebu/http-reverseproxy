@@ -21,7 +21,7 @@ var handleRequest = function(req, res) {
   }
 
   if (config.fallback_port) {
-    return proxy.web(req, res, { target: 'http://127.0.0.1:' + config.fallback_port});
+    return proxy.web(req, res, { target: 'http://127.0.0.1:' + config.fallback_port });
   }
 
   console.log('No rules for :', req.headers['host']);
@@ -36,20 +36,18 @@ proxy.on('error', function(err, req, res) {
   sendError(err, req, res);
 });
 
-var options = {
-  key: fs.readFileSync(config.https.key),
-  cert: fs.readFileSync(config.https.cert)
-};
 
-var httpsServer = require('https').createServer(options, handleRequest);
-var server = require('http').createServer(handleRequest);
+if (config.https && config.https.listening_port) {
+  var options = {
+    key: fs.readFileSync(config.https.key),
+    cert: fs.readFileSync(config.https.cert)
+  };
 
-if (config.https.listening_port) {
+  require('https').createServer(options, handleRequest).listen(config.https.listening_port);
   console.log('listening on port ' + config.https.listening_port);
-  httpsServer.listen(config.https.listening_port);
 }
 
 if (config.listening_port) {
+  require('http').createServer(handleRequest).listen(config.listening_port);
   console.log('listening on port ' + config.listening_port);
-  server.listen(config.listening_port);
 }
