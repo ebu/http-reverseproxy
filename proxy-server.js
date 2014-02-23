@@ -4,6 +4,16 @@ var http = require('http'),
   config = require('./config'),
   fs = require('fs');
 
+/**
+ * Return the hostname without port number
+ */
+var extractHostname = function(host) {
+  var index = host.indexOf(':');
+  if (index > 0) {
+    return host.substring(0, index);
+  }
+  return host;
+}
 
 var sendError = function(err, req, res) {
   res.writeHead(500, { 'Content-Type': 'text/plain' });
@@ -11,10 +21,11 @@ var sendError = function(err, req, res) {
 };
 
 var handleRequest = function(req, res) {
-  var reqHost = req.headers['host'];
+  var reqHost = extractHostname(req.headers['host']);
 
   for (c in config.backend_servers) {
     var configHost = config.backend_servers[c].origin_host;
+
     if (reqHost === configHost) {
       return proxy.web(req, res, { target: 'http://127.0.0.1:' + config.backend_servers[c].local_port });
     }
@@ -24,8 +35,8 @@ var handleRequest = function(req, res) {
     return proxy.web(req, res, { target: 'http://127.0.0.1:' + config.fallback_port });
   }
 
-  console.log('No rules for :', req.headers['host']);
-  sendError(new Error('No rule for host'), req, res);
+  console.log('No rules for ', reqHost);
+  sendError(new Error('No rule for '+ reqHost), req, res);
 };
 
 
