@@ -1,6 +1,6 @@
 # http-reverseproxy
 
-This project implements a very simple reverse proxy which distribute the requests using the hostname.
+This project implements a simple reverse proxy which distributes the requests according to the hostname.
 
 We use it to build demonstrators on virtual machines running different servers of a distributed system.
 
