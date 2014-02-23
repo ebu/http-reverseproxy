@@ -1,22 +1,22 @@
 var config = {
-  listening_port: 5000,
+  listening_port: 80,
   https: {
     listening_port: 443,
-    key: '',
-    cert: ''
+    key: '', // SSL Private key
+    cert: '' // SSL Public certificate
   },
   backend_servers: [
     {
       'local_port': 8080,
-      'origin_host': 'www.ebu.io:5000'
+      'origin_host': 'www.ebu.io'
     },
     {
       'local_port': 8081,
-      'origin_host': 'bbc1.ebu.io:5000'
+      'origin_host': 'bbc1.ebu.io'
     },
     {
       'local_port': 8082,
-      'origin_host': 'bbc2.ebu.io:5000'
+      'origin_host': 'bbc2.ebu.io'
     }
   ],
   fallback_port: 8090 | null,

@@ -30,13 +30,12 @@ var handleRequest = function(req, res) {
 
 
 var proxy = httpProxy.createProxyServer({});
-
 proxy.on('error', function(err, req, res) {
   console.log('Unable to forward the request from ', req.headers['host']);
   sendError(err, req, res);
 });
 
-
+// HTTPS
 if (config.https && config.https.listening_port) {
   var options = {
     key: fs.readFileSync(config.https.key),
@@ -47,6 +46,7 @@ if (config.https && config.https.listening_port) {
   console.log('listening on port ' + config.https.listening_port);
 }
 
+// HTTP
 if (config.listening_port) {
   require('http').createServer(handleRequest).listen(config.listening_port);
   console.log('listening on port ' + config.listening_port);

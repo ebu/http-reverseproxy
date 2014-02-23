@@ -4,6 +4,8 @@ This project implements a simple reverse proxy which distributes the requests ac
 
 We use it to build demonstrators on virtual machines running different servers of a distributed system.
 
+The project is widely based on [node-http-proxy](https://github.com/nodejitsu/node-http-proxy)
+
 More information on [EBU developments](http://www.ebu.io)
 
 
@@ -23,25 +25,31 @@ Ensure your system has [Node.js](http://nodejs.org/) and NPM installed.
 
     $ npm start
 
+
 ## Configuration
 
     var config = {
-      listening_port: 5000,
-      backend_servers:[
+      listening_port: 80,
+      https: {
+        listening_port: 443,
+        key: '', // SSL Private key
+        cert: '' // SSL Public certificate
+      },
+      backend_servers: [
         {
-          'origin_host': 'www.ebu.io:5000',
-          'local_port': 8080
+          'local_port': 8080,
+          'origin_host': 'www.ebu.io'
         },
         {
-          'origin_host': 'bbc1.ebu.io:5000',
-          'local_port': 8081
+          'local_port': 8081,
+          'origin_host': 'bbc1.ebu.io'
         },
         {
-          'origin_host': 'bbc2.cpalocal.ebu.io:5000',
-          'local_port': 8082
+          'local_port': 8082,
+          'origin_host': 'bbc2.ebu.io'
         }
       ],
-      fallback_port: 8090,
+      fallback_port: 8090 | null,
       error_message: 'The system is down.\n\n2014 - EBU Technology & Innovation - ebu.io'
     };
 
@@ -50,10 +58,12 @@ Ensure your system has [Node.js](http://nodejs.org/) and NPM installed.
 
 `listening_port` - Listening port of the reverse proxy
 
+`https` - It enables SSL support on `https.listening_port` using the private key `key` and the public certificate `cert`
+
 `backend_servers` - The request are distributed according to the origin_host to the local port.
 
-`fallback_port` - If fallback_port equals null, error_message is returned with a status code 500.
-Otherwise if no backend rules match the request, the reverse proxy will this local port to pass the request.
+`fallback_port` - If no backend_servers rules match the request, the request will be sent to this local port if different than null.
+Otherwise an error_message is returned with a status code 500.
 
 `error_message` - Message sent in case of error (ie Backend server doesn't respond.)
 
